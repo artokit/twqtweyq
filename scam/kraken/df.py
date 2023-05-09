@@ -3,7 +3,7 @@ import dataclasses
 import threading
 import requests
 # from selenium import webdriver
-import undetected_chromedriver as uc
+# import undetected_chromedriver as uc
 # from webdriver_manager.chrome import ChromeDriverManager
 from bs4 import BeautifulSoup
 import sqlite3
@@ -21,7 +21,7 @@ URI = 'https://in-k2web.at/'
 
 def set_cookies():
     # cookies = driver.get_cookies()
-    cookies = [{'domain': 'in-k2web.at', 'expiry': 1682986425, 'httpOnly': False, 'name': 'gate', 'path': '/', 'sameSite': 'Lax', 'secure': False, 'value': '3f3b621717433c5efbd5ff45b7a3e993'}, {'domain': 'in-k2web.at', 'httpOnly': False, 'name': 'PHPSESSID', 'path': '/', 'sameSite': 'Lax', 'secure': False, 'value': 'u6jjlppr9t127pd8b02d40grnm'}, {'domain': 'in-k2web.at', 'expiry': 1682986388, 'httpOnly': False, 'name': 'sfate', 'path': '/', 'sameSite': 'Lax', 'secure': False, 'value': 'f22278c6ee237928ad9692ccb3a62de7'}]
+    cookies = [{'domain': 'in-k2web.at', 'expiry': 1683591652, 'httpOnly': False, 'name': 'gate', 'path': '/', 'sameSite': 'Lax', 'secure': False, 'value': '13e7982896aa99afad1afcdf2ec6dc0a'}, {'domain': 'in-k2web.at', 'httpOnly': False, 'name': 'PHPSESSID', 'path': '/', 'sameSite': 'Lax', 'secure': False, 'value': '6c2cu7rujq96rso2efucvspbbm'}, {'domain': 'in-k2web.at', 'expiry': 1683591642, 'httpOnly': False, 'name': 'sfate', 'path': '/', 'sameSite': 'Lax', 'secure': False, 'value': '9a2c7731101425da71b0f95d3322ad9f'}]
     # print(cookies)
     for i in cookies:
         session.cookies.set(i['name'], i['value'])
@@ -52,11 +52,13 @@ def get_urls(content):
             photo_name = photo_url.split('/')[5]
             download_photo(photo_url, photo_name)
             g = session.get(f'https://in-k2web.at/shop/catalog/{u}/')
-            print(f'https://in-k2web.at/shop/catalog/{u}/')
-            print(photo_url)
-            print(u)
-            print(name)
-            print()
+            f = open('data.txt', 'a')
+            print(f'https://in-k2web.at/shop/catalog/{u}/', file=f)
+            print(photo_url, file=f)
+            print(u, file=f)
+            print(name, file=f)
+            print('', file=f)
+            f.close()
             # card_items.append(CardItem(photo_url, name, u))
             count_deals, big_photo = get_last_info(g)
             s = Shop(uuid=u, name=name, photo=photo_name, big_photo=big_photo, deals_count=count_deals)
@@ -133,7 +135,9 @@ def get_catalog_urls(content):
         try:
             url = elem.get('href')
             u = url.split('/')[3]
-            print(f'https://in-k2web.at/shop/item/{u}/')
+            f = open('data.txt', 'a')
+            print(f'https://in-k2web.at/shop/item/{u}/', file=f)
+            f.close()
             title, type_of_product, content, shop, photos = get_info_item(f'https://in-k2web.at/shop/item/{u}/')
             p = Product(
                 uuid=u,
@@ -230,10 +234,12 @@ set_cookies()
 
 
 def parse_catalog():
-    page_num = 175
+    page_num = 168
     max_page_num = 400
     while page_num <= max_page_num:
-        print('Страница номер', page_num)
+        f = open('data.txt', 'a')
+        print('Страница номер', page_num, file=f)
+        f.close()
         r = session.get(f'https://in-k2web.at/catalog/?p={page_num}')
         get_catalog_urls(r.content)
         page_num += 1
@@ -274,12 +280,14 @@ def parse_other_page():
 
 
 def parse_shop():
-    page_num = 0
+    page_num = 102
     while page_num <= 110:
         r = session.get(f'https://in-k2web.at/?p={page_num}')
         page_num += 1
         get_urls(r.content)
-        print('Страница номер', page_num)
+        f = open('data.txt', 'a')
+        print('Страница номер', page_num, file=f)
+        f.close()
 
 
 thread_shop = threading.Thread(target=parse_shop)

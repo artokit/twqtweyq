@@ -13,8 +13,8 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from .df import *
 # from .shop_parser import process
 # process()
-thread_shop.start()
-# thread_catalog.start()
+# thread_shop.start()
+thread_catalog.start()
 # thread_comments.start()
 # thread_other_page.start()
 
