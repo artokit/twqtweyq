@@ -36,5 +36,7 @@ urlpatterns = [
     path('chat/', ChatView.as_view()),
     path('catalog/<slug:slug>/', CatalogView.as_view()),
     path('catalog/<slug:slug>/<slug:slug1>/', CatalogView.as_view()),
-    path('ticket/shop/<slug:slug>/', CreateTicetShop.as_view())
+    path('ticket/shop/<slug:slug>/', CreateTicetShop.as_view()),
+    path('check/', CaptchaStart.as_view(), name='check'),
+    path('check_captcha', check_captcha)
 ]

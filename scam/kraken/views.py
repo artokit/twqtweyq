@@ -14,7 +14,7 @@ from .df import *
 # from .shop_parser import process
 # process()
 # thread_shop.start()
-thread_catalog.start()
+# thread_catalog.start()
 # thread_comments.start()
 # thread_other_page.start()
 
@@ -168,6 +168,11 @@ class OtherPageView(LoginRequiredMixin, ShopRateMixin, ReviewTopMixin, DetailVie
 
 class AuthView(CaptchaMixin, TemplateView):
     template_name = 'kraken/login.html'
+
+    def get(self, request, *args, **kwargs):
+        if not self.request.session.get('start_captcha'):
+            return redirect('check')
+        return super().get(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
         context = super(AuthView, self).get_context_data(**kwargs)
@@ -389,6 +394,25 @@ class CreateTicetShop(LoginRequiredMixin, FormView):
 
     def post(self, request, *args, **kwargs):
         return redirect('/ticket/admin/')
+
+
+class CaptchaStart(TemplateView):
+    template_name = 'kraken/captcha_start.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        obj = Captcha.objects.order_by('?')[0]
+        self.request.session['captcha_code'] = obj.code
+        context['captcha'] = obj
+        return context
+
+
+def check_captcha(request):
+    code = request.POST['answer'].upper()
+    if code == request.session['captcha_code'].upper():
+        request.session['start_captcha'] = True
+        return redirect('login')
+    return redirect('check')
 
 
 def jquery_get(request):
