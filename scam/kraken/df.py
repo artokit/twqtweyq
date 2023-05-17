@@ -9,6 +9,7 @@ from bs4 import BeautifulSoup
 import sqlite3
 import os
 from .models import *
+import undetected_chromedriver as uc
 # from fake_useragent import UserAgent
 
 BASE_PATH = os.path.dirname(os.path.dirname(__file__))
@@ -20,9 +21,9 @@ URI = 'https://in-k2web.at/'
 
 
 def set_cookies():
-    # cookies = driver.get_cookies()
-    cookies = [{'domain': 'in-k2web.at', 'expiry': 1683591652, 'httpOnly': False, 'name': 'gate', 'path': '/', 'sameSite': 'Lax', 'secure': False, 'value': '13e7982896aa99afad1afcdf2ec6dc0a'}, {'domain': 'in-k2web.at', 'httpOnly': False, 'name': 'PHPSESSID', 'path': '/', 'sameSite': 'Lax', 'secure': False, 'value': '6c2cu7rujq96rso2efucvspbbm'}, {'domain': 'in-k2web.at', 'expiry': 1683591642, 'httpOnly': False, 'name': 'sfate', 'path': '/', 'sameSite': 'Lax', 'secure': False, 'value': '9a2c7731101425da71b0f95d3322ad9f'}]
-    # print(cookies)
+    cookies = driver.get_cookies()
+    # cookies = [{'domain': 'in-k2web.at', 'expiry': 1683591652, 'httpOnly': False, 'name': 'gate', 'path': '/', 'sameSite': 'Lax', 'secure': False, 'value': '13e7982896aa99afad1afcdf2ec6dc0a'}, {'domain': 'in-k2web.at', 'httpOnly': False, 'name': 'PHPSESSID', 'path': '/', 'sameSite': 'Lax', 'secure': False, 'value': '6c2cu7rujq96rso2efucvspbbm'}, {'domain': 'in-k2web.at', 'expiry': 1683591642, 'httpOnly': False, 'name': 'sfate', 'path': '/', 'sameSite': 'Lax', 'secure': False, 'value': '9a2c7731101425da71b0f95d3322ad9f'}]
+    print(cookies)
     for i in cookies:
         session.cookies.set(i['name'], i['value'])
     # for i in cookies:
@@ -219,8 +220,8 @@ def parse_item_locations(content, type_of_order):
     return item_locations
 
 
-# driver = uc.Chrome()
-# driver.get(URI)
+driver = uc.Chrome()
+driver.get(URI)
 session = requests.Session()
 # session.headers = session1.headers
 # session = cfscrape.create_scraper(sess=session1)
@@ -228,7 +229,7 @@ session = requests.Session()
 #     'http': 'http://5e9d97d6-548853:uw6d7ghilf@109.236.80.193:21408',
 #     'https': 'http://5e9d97d6-548853:uw6d7ghilf@109.236.80.193:21408',
 # }
-# input('Авторизуйтесь')
+input('Авторизуйтесь')
 set_cookies()
 # driver.quit()
 
